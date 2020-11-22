@@ -194,8 +194,8 @@ local __local_mt = {
 
 Group.is_existing_group = function(key) return group_hash[string.lower(key)] ~= nil end
 
-Group.__private_create = function(name, fg, bg, style, default, bang)
-    name = string.lower(name)
+Group.__private_create = function(hiName, fg, bg, style, default, bang)
+    local name = string.lower(hiName)
 
     local handler = {}
 
@@ -244,6 +244,7 @@ Group.__private_create = function(name, fg, bg, style, default, bang)
             __bang__ = bang or false,
 
             name = name,
+            hiName = hiName,
             fg = fg_color,
             bg = bg_color,
             style = style_style,
@@ -299,7 +300,7 @@ function Group:apply()
     if self.__default__ == false then
         -- Clear the current highlighting
         nvim.nvim_command(
-            string.format('highlight %s NONE', self.name)
+            string.format('highlight %s NONE', self.hiName)
         )
     end
 
@@ -308,7 +309,7 @@ function Group:apply()
         string.format('highlight%s %s %s guifg=%s guibg=%s gui=%s'
             , execute.fif(self.__bang__, '!', '')
             , execute.fif(self.__default__, 'default', '')
-            , self.name
+            , self.hiName
             , self.fg:to_rgb()
             , self.bg:to_rgb()
             , self.style:to_nvim()
